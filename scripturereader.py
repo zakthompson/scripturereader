@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import time
 import json
-import signal
 import subprocess
 import schedule
 
@@ -140,4 +139,7 @@ render_verse()
 
 schedule.every().day.at("00:00").do(roll_date)
 
-signal.pause()
+while True:
+    schedule.run_pending()
+
+    time.sleep(1)
