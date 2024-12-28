@@ -3,6 +3,7 @@ import time
 import json
 import signal
 import subprocess
+import schedule
 
 from gpiozero import Button
 from PIL import Image, ImageDraw, ImageFont
@@ -36,7 +37,7 @@ year = now.year
 day_of_year = now.timetuple().tm_yday
 index = now.timetuple().tm_yday - 1
 
-if year % 4 != 0 and day_of_year > 60:
+if year % 4 != 0 and day_of_year > 58:
     index += 1
 
 current_verse = d[index]
@@ -51,7 +52,9 @@ def handle_button(button):
     print("Button press detected: {}".format(label))
 
     if label == "A":
-        subprocess.run(["aplay", "/home/zak/scripturereader/audio/21.wav"])
+        subprocess.run(
+            ["aplay", "/home/zak/scripturereader/audio/{}.wav".format(index)]
+        )
 
     elif label == "B":
         now = datetime.now()
@@ -59,7 +62,7 @@ def handle_button(button):
         day_of_year = now.timetuple().tm_yday
         index = now.timetuple().tm_yday - 1
 
-        if year % 4 != 0 and day_of_year > 60:
+        if year % 4 != 0 and day_of_year > 58:
             index += 1
 
     elif label == "X":
@@ -116,6 +119,25 @@ def render_verse():
     font_size = 24
 
 
+def roll_date():
+    global index
+    global current_verse
+    global d
+
+    now = datetime.now()
+    year = now.year
+    day_of_year = now.timetuple().tm_yday
+    index = now.timetuple().tm_yday - 1
+
+    if year % 4 != 0 and day_of_year > 58:
+        index += 1
+
+    current_verse = d[index]
+    render_verse()
+
+
 render_verse()
+
+schedule.every().day.at("00:00").do(roll_date)
 
 signal.pause()
