@@ -116,5 +116,6 @@ def render_verse():
 
 
 render_verse()
+font_size = 24
 
 signal.pause()
