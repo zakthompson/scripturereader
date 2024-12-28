@@ -48,11 +48,10 @@ def handle_button(button):
     global d
 
     label = LABELS[BUTTONS.index(button)]
-    print("Button press detected: {}".format(label))
 
     if label == "A":
         subprocess.run(
-            ["aplay", "/home/zak/scripturereader/audio/{}.wav".format(index)]
+            ["aplay", "-q", "/home/zak/scripturereader/audio/{}.wav".format(index)]
         )
 
     elif label == "B":
