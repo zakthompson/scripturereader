@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 import time
 import json
-import datetime
 import signal
 import subprocess
 
 from gpiozero import Button
 from PIL import Image, ImageDraw, ImageFont
 from image_utils import ImageText
+from datetime import datetime
 
 import st7789
 
@@ -31,8 +31,14 @@ disp = st7789.ST7789(
 with open("/home/zak/scripturereader/data.json") as f:
     d = json.load(f)
 
-now = datetime.datetime.now()
-index = now.day - 1
+now = datetime.now()
+year = now.year
+day_of_year = now.timetuple().tm_yday
+index = now.timetuple().tm_yday - 1
+
+if year % 4 != 0 and day_of_year > 60:
+    index += 1
+
 current_verse = d[index]
 
 
@@ -48,14 +54,19 @@ def handle_button(button):
         subprocess.run(["aplay", "/home/zak/scripturereader/audio/21.wav"])
 
     elif label == "B":
-        now = datetime.datetime.now()
-        index = now.day - 1
+        now = datetime.now()
+        year = now.year
+        day_of_year = now.timetuple().tm_yday
+        index = now.timetuple().tm_yday - 1
+
+        if year % 4 != 0 and day_of_year > 60:
+            index += 1
 
     elif label == "X":
-        index = (index - 1) % 31
+        index = (index - 1) % 366
 
     elif label == "Y":
-        index = (index + 1) % 31
+        index = (index + 1) % 366
 
     current_verse = d[index]
     render_verse()
