@@ -113,9 +113,9 @@ def render_verse():
         )
 
     disp.display(img.image)
+    font_size = 24
 
 
 render_verse()
-font_size = 24
 
 signal.pause()
