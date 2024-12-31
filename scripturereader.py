@@ -51,7 +51,7 @@ def handle_button(button):
 
     if label == "A":
         subprocess.run(
-            ["aplay", "-q", "/home/zak/scripturereader/audio/{}.wav".format(index)]
+            ["aplay", "-q", "/home/zak/scripturereader/audio/-{}.wav".format(index + 1)]
         )
 
     elif label == "B":
